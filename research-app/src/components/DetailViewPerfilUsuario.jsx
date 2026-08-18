@@ -8,7 +8,7 @@ import { categoryStats, geoData, totalRegistros, totalCities } from "../data";
 
 const ICONS = { Gamepad2, BookOpen, Music, Tv };
 
-export default function DetailView({ onBack }) {
+export default function DetailViewPerfilUsuario({ onBack }) {
   const geoSorted = useMemo(() => [...geoData].sort((a, b) => b.count - a.count), []);
 
   return (

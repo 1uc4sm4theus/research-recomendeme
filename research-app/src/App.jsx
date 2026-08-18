@@ -1,11 +1,9 @@
-import React, { useState, Suspense, lazy } from "react";
+import React, { useState, Suspense } from "react";
 import { T } from "./tokens";
 import { useSEO } from "./seo";
+import { getReport } from "./reports";
 import NavBar from "./components/NavBar";
 import ListView from "./components/ListView";
-
-// DetailView carrega recharts — code-split para não pesar a listagem inicial
-const DetailView = lazy(() => import("./components/DetailView"));
 
 function DetailFallback() {
   return (
@@ -16,8 +14,11 @@ function DetailFallback() {
 }
 
 export default function App() {
-  const [view, setView] = useState("list");
+  const [view, setView] = useState("list"); // "list" | slug de uma pesquisa
   useSEO(view);
+
+  const activeReport = view === "list" ? null : getReport(view);
+  const DetailComponent = activeReport?.component;
 
   return (
     <div style={{ background: T.navy, minHeight: "100vh", fontFamily: "'Figtree', ui-sans-serif, system-ui, sans-serif", color: T.text }}>
@@ -34,11 +35,11 @@ export default function App() {
       <NavBar view={view} onHome={() => setView("list")} />
 
       <div key={view} className="rm-fade">
-        {view === "list" ? (
-          <ListView onOpen={() => setView("detail")} />
+        {view === "list" || !DetailComponent ? (
+          <ListView onOpen={(slug) => setView(slug)} />
         ) : (
           <Suspense fallback={<DetailFallback />}>
-            <DetailView onBack={() => setView("list")} />
+            <DetailComponent onBack={() => setView("list")} />
           </Suspense>
         )}
       </div>

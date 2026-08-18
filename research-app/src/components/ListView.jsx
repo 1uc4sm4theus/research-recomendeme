@@ -2,7 +2,7 @@ import React from "react";
 import { ArrowRight } from "lucide-react";
 import { T } from "../tokens";
 import { Card, Eyebrow } from "./ui";
-import { totalRegistros } from "../data";
+import { REPORTS } from "../reports";
 
 export default function ListView({ onOpen }) {
   return (
@@ -19,49 +19,47 @@ export default function ListView({ onOpen }) {
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }} className="rm-grid">
-        <Card style={{ padding: 28, cursor: "pointer", display: "flex", flexDirection: "column", gap: 18 }}>
-          <div onClick={onOpen} style={{ display: "flex", flexDirection: "column", gap: 18, cursor: "pointer" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-              <span
-                style={{
-                  fontSize: ".65rem",
-                  fontWeight: 700,
-                  letterSpacing: ".14em",
-                  textTransform: "uppercase",
-                  color: T.electric,
-                  background: T.electric06,
-                  border: `1px solid ${T.electric30}`,
-                  padding: "5px 10px",
-                  borderRadius: 6,
-                }}
-              >
-                Ciência de Dados
-              </span>
-              <span style={{ color: T.muted, fontSize: ".72rem" }}>2020–2025</span>
+        {REPORTS.map((r) => (
+          <Card key={r.slug} style={{ padding: 28, cursor: "pointer", display: "flex", flexDirection: "column", gap: 18 }}>
+            <div onClick={() => onOpen(r.slug)} style={{ display: "flex", flexDirection: "column", gap: 18, cursor: "pointer" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <span
+                  style={{
+                    fontSize: ".65rem",
+                    fontWeight: 700,
+                    letterSpacing: ".14em",
+                    textTransform: "uppercase",
+                    color: T.electric,
+                    background: T.electric06,
+                    border: `1px solid ${T.electric30}`,
+                    padding: "5px 10px",
+                    borderRadius: 6,
+                  }}
+                >
+                  {r.tag}
+                </span>
+                <span style={{ color: T.muted, fontSize: ".72rem" }}>{r.period}</span>
+              </div>
+
+              <h2 style={{ fontSize: "1.28rem", fontWeight: 700, lineHeight: 1.35, color: T.text, margin: 0 }}>
+                {r.title}
+              </h2>
+
+              <p style={{ color: T.muted, fontSize: ".88rem", lineHeight: 1.6, margin: 0 }}>{r.summary}</p>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 8, color: T.electric, fontSize: ".85rem", fontWeight: 600, marginTop: 4 }}>
+                Ver pesquisa completa <ArrowRight size={15} />
+              </div>
             </div>
 
-            <h2 style={{ fontSize: "1.28rem", fontWeight: 700, lineHeight: 1.35, color: T.text, margin: 0 }}>
-              Análise Descritiva do Perfil de Usuário e Padrões de Consumo Cultural na Plataforma RecomendeMe
-            </h2>
-
-            <p style={{ color: T.muted, fontSize: ".88rem", lineHeight: 1.6, margin: 0 }}>
-              Perfil comportamental dos usuários e padrões de consumo cultural, mapeando preferências em séries,
-              livros, jogos e músicas e sua relação com o engajamento real da comunidade.
-            </p>
-
-            <div style={{ display: "flex", alignItems: "center", gap: 8, color: T.electric, fontSize: ".85rem", fontWeight: 600, marginTop: 4 }}>
-              Ver pesquisa completa <ArrowRight size={15} />
+            <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 14, display: "flex", gap: 18, flexWrap: "wrap" }}>
+              <span style={{ fontSize: ".74rem", color: T.muted }}>{r.metaLabel}</span>
+              <span style={{ fontSize: ".74rem", color: T.muted }}>{r.metaExtra}</span>
             </div>
-          </div>
+          </Card>
+        ))}
 
-          <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 14, display: "flex", gap: 18, flexWrap: "wrap" }}>
-            <span style={{ fontSize: ".74rem", color: T.muted }}>LEA · UFRN</span>
-            <span style={{ fontSize: ".74rem", color: T.muted }}>Relatório de Consultoria</span>
-            <span style={{ fontSize: ".74rem", color: T.muted }}>{totalRegistros} registros</span>
-          </div>
-        </Card>
-
-        {["Grafo de investigação e perfis comportamentais", "Benchmark de serialização GraphRAG"].map((title, i) => (
+        {["Grafo de investigação e perfis comportamentais"].map((title, i) => (
           <Card key={i} style={{ padding: 28, opacity: 0.5, display: "flex", flexDirection: "column", gap: 18, justifyContent: "space-between" }}>
             <div>
               <span

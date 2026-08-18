@@ -7,10 +7,12 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks: {
-          "vendor-react": ["react", "react-dom"],
-          "vendor-recharts": ["recharts"],
-          "vendor-icons": ["lucide-react"],
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("recharts") || id.includes("d3-")) return "vendor-recharts";
+            if (id.includes("lucide-react")) return "vendor-icons";
+            return "vendor-react"; // react, react-dom, scheduler e afins juntos evita chunk circular
+          }
         },
       },
     },

@@ -1,48 +1,27 @@
 import { useEffect } from "react";
+import { REPORTS, getReport } from "./reports";
 
 export const SITE_URL = "https://research.recomendeme.com.br";
 export const SITE_NAME = "RecomendeMe Research";
 export const OG_IMAGE = "https://recomendeme.com/pt/logo_header.png";
 
-export const REPORT_SEO = {
-  slug: "perfil-usuario-consumo-cultural-recomendeme",
-  title: "Perfil de Usuário e Consumo Cultural na RecomendeMe | RecomendeMe Research",
-  description:
-    "Relatório de consultoria (LEA/UFRN) sobre o perfil comportamental dos usuários e os padrões de consumo cultural na plataforma RecomendeMe, com dados de 2020 a 2025 em séries, livros, jogos e músicas.",
-  authors: [
-    "Emanuel Carneiro Faustino da Silva",
-    "Gabriel Ferreira Trindade de Souza",
-    "Lucas Matheus Alves da Silva",
-    "Antonio M. B. do Nascimento",
-  ],
-  keywords: [
-    "estatística descritiva",
-    "plataforma digital",
-    "padrões de consumo cultural",
-    "RecomendeMe",
-    "perfil de usuário",
-    "análise de dados culturais",
-  ],
-  datePublished: "2026-07-03",
-};
-
 /**
  * Atualiza <title>, meta tags, Open Graph, Twitter Card, canonical e JSON-LD.
+ * `view` é 'list' ou o slug de uma pesquisa registrada em src/reports.js.
  * Roda no cliente — cobre crawlers que executam JS (Googlebot atual).
  * IMPORTANTE: para bots que NÃO executam JS (comuns em crawlers de IA/GEO),
- * isso não é suficiente sozinho — a rota precisa ser pré-renderizada no
- * build (ver vite-plugin-ssg / prerender no vite.config.js deste projeto).
+ * isso não é suficiente sozinho — a rota precisa ser pré-renderizada no build.
  */
 export function useSEO(view) {
   useEffect(() => {
-    const isDetail = view === "detail";
-    const title = isDetail ? REPORT_SEO.title : `Pesquisas | ${SITE_NAME}`;
+    const report = view === "list" ? null : getReport(view);
+    const isDetail = !!report;
+
+    const title = isDetail ? `${report.title} | ${SITE_NAME}` : `Pesquisas | ${SITE_NAME}`;
     const description = isDetail
-      ? REPORT_SEO.description
+      ? report.seoDescription
       : "Estudos, relatórios e working papers do RecomendeMe Research & Intelligence sobre comportamento cultural, dados da plataforma e metodologias de recomendação.";
-    const canonical = isDetail
-      ? `${SITE_URL}/pesquisas/${REPORT_SEO.slug}`
-      : `${SITE_URL}/pesquisas`;
+    const canonical = isDetail ? `${SITE_URL}/pesquisas/${report.slug}` : `${SITE_URL}/pesquisas`;
 
     document.title = title;
 
@@ -57,9 +36,9 @@ export function useSEO(view) {
     };
 
     setMeta("name", "description", description);
-    setMeta("name", "keywords", REPORT_SEO.keywords.join(", "));
+    setMeta("name", "keywords", isDetail ? report.keywords.join(", ") : "");
     setMeta("name", "robots", "index, follow");
-    setMeta("name", "author", REPORT_SEO.authors.join(", "));
+    setMeta("name", "author", isDetail ? report.authors.join(", ") : "RecomendeMe");
 
     setMeta("property", "og:type", isDetail ? "article" : "website");
     setMeta("property", "og:title", title);
@@ -86,22 +65,20 @@ export function useSEO(view) {
       ? {
           "@context": "https://schema.org",
           "@type": "Report",
-          headline:
-            "Análise Descritiva do Perfil de Usuário e Padrões de Consumo Cultural na Plataforma RecomendeMe",
-          description: REPORT_SEO.description,
+          headline: report.title,
+          description: report.seoDescription,
           url: canonical,
           image: OG_IMAGE,
-          datePublished: REPORT_SEO.datePublished,
+          datePublished: report.datePublished,
           inLanguage: "pt-BR",
-          keywords: REPORT_SEO.keywords.join(", "),
-          author: REPORT_SEO.authors.map((name) => ({ "@type": "Person", name })),
+          keywords: report.keywords.join(", "),
+          author: report.authors.map((name) => ({ "@type": "Person", name })),
           publisher: {
             "@type": "Organization",
             name: "RecomendeMe",
             url: "https://recomendeme.com",
             logo: { "@type": "ImageObject", url: OG_IMAGE },
           },
-          about: { "@type": "Thing", name: "Consumo cultural na plataforma RecomendeMe" },
           isPartOf: { "@type": "CreativeWorkSeries", name: SITE_NAME, url: `${SITE_URL}/pesquisas` },
         }
       : {
@@ -113,14 +90,12 @@ export function useSEO(view) {
           isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
           mainEntity: {
             "@type": "ItemList",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                url: `${SITE_URL}/pesquisas/${REPORT_SEO.slug}`,
-                name: REPORT_SEO.title,
-              },
-            ],
+            itemListElement: REPORTS.map((r, i) => ({
+              "@type": "ListItem",
+              position: i + 1,
+              url: `${SITE_URL}/pesquisas/${r.slug}`,
+              name: r.title,
+            })),
           },
         };
 
