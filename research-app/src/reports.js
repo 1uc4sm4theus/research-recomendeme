@@ -59,6 +59,29 @@ export const REPORTS = [
       "Working paper WP-CI-001: benchmark experimental de formatos de serialização de subgrafos (Triples, Markdown, JSON) em pipelines GraphRAG na rede descentralizada Nosana/Solana, com custo total inferior a US$2.",
     component: lazy(() => import("./components/DetailViewGraphRAG")),
   },
+  {
+    slug: "exploracao-acervos-comunicacoes-alto-interesse-publico",
+    tag: "Pesquisa Metodológica",
+    period: "2026",
+    title:
+      "Exploração de Acervos Digitais de Comunicações de Alto Interesse Público: Estrutura de Conteúdo, Arquitetura de Descoberta e Limites Metodológicos na Mensuração de Atenção",
+    summary:
+      "Auditoria metodológica do MasterZap Analytics e proposta de pesquisa sobre acervos digitais controversos, distinguindo estrutura textual, alcance agregado e comportamento de navegação real.",
+    metaLabel: "MasterZap Analytics",
+    metaExtra: "Auditoria preliminar",
+    authors: ["Lucas Matheus Alves da Silva", "Raphael Chagas da Silva"],
+    keywords: [
+      "MasterZap Analytics",
+      "arquitetura de informação",
+      "atenção do usuário",
+      "acervos digitais",
+      "auditoria metodológica",
+    ],
+    datePublished: "2026-09-04",
+    seoDescription:
+      "Auditoria metodológica preliminar do MasterZap Analytics e proposta de pesquisa sobre estrutura de acervos digitais, sinais agregados de atenção, ética e instrumentação de navegação.",
+    component: lazy(() => import("./components/DetailViewMasterZap")),
+  },
 ];
 
 export function getReport(slug) {
