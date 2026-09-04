@@ -21,6 +21,41 @@ export const evidenceLevels = [
   },
 ];
 
+export const emotionalThemes = [
+  { theme: "Relação Moraes ↔ políticos", weight: 95 },
+  { theme: "Articulação sigilosa no STF", weight: 85 },
+  { theme: "Poder econômico (JBS, bancos)", weight: 73 },
+  { theme: "Golpismo / ameaça institucional", weight: 68 },
+  { theme: "Bastidores do Congresso", weight: 52 },
+  { theme: "Personalidades / celebridades", weight: 29 },
+];
+
+export const contactInterest = [
+  { contact: "Martha ...", score: 97, classification: "Alta" },
+  { contact: "Alexan...", score: 91, classification: "Alta" },
+  { contact: "Dias Tof...", score: 74, classification: "Alta" },
+  { contact: "Kassio ...", score: 62, classification: "Média" },
+  { contact: "Ricardo...", score: 55, classification: "Média" },
+  { contact: "Davi Al...", score: 48, classification: "Média" },
+  { contact: "Hugo ...", score: 43, classification: "Média" },
+  { contact: "Ciro N...", score: 38, classification: "Média" },
+  { contact: "Wesley...", score: 29, classification: "Baixa" },
+];
+
+export const citationInterest = [
+  { entity: "Alexa...", excerpt: "Encontr...", seconds: 87, classification: "Alta" },
+  { entity: "Jair Bo...", excerpt: "Chamad...", seconds: 72, classification: "Alta" },
+  { entity: "Luiz In...", excerpt: "Reunião ...", seconds: 65, classification: "Alta" },
+  { entity: "Minist...", excerpt: "Alerta S...", seconds: 58, classification: "Média" },
+  { entity: "Ciro ...", excerpt: "Grande ...", seconds: 41, classification: "Média" },
+  { entity: "João ...", excerpt: "Tenho e...", seconds: 34, classification: "Média" },
+  { entity: "Hugo ...", excerpt: "Reuniã...", seconds: 27, classification: "Média" },
+  { entity: "André...", excerpt: "Banco é...", seconds: 19, classification: "Baixa" },
+];
+
+export const visibleContactScore = contactInterest.reduce((total, item) => total + item.score, 0);
+export const averageCitationTime = citationInterest.reduce((total, item) => total + item.seconds, 0) / citationInterest.length;
+
 export const researchQuestions = [
   {
     id: "RQ1",

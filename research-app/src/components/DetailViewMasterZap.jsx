@@ -1,4 +1,5 @@
 import React from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { ArrowLeft, BookOpen, Database, GitBranch, ShieldCheck, Target, Workflow } from "lucide-react";
 import { T } from "../tokens";
 import { Card, Eyebrow, Section, SubHeading, MetaItem, pStyle } from "./ui";
@@ -9,6 +10,11 @@ import {
   v2Events,
   ethicalPrinciples,
   limitations,
+  emotionalThemes,
+  contactInterest,
+  citationInterest,
+  visibleContactScore,
+  averageCitationTime,
 } from "../data-masterzap";
 
 const levelColors = {
@@ -133,7 +139,98 @@ export default function DetailViewMasterZap({ onBack }) {
         </p>
       </Section>
 
-      <Section n="05" title="Instrumentação v2">
+      <Section n="05" title="Resultados preliminares">
+        <Card style={{ padding: 18, marginBottom: 22, borderColor: "rgba(245,158,11,.35)", background: "rgba(245,158,11,.06)" }}>
+          <strong style={{ display: "block", color: "#f59e0b", fontSize: ".84rem", marginBottom: 6 }}>Leitura com ressalvas</strong>
+          <p style={{ margin: 0, color: T.muted, fontSize: ".84rem", lineHeight: 1.65 }}>
+            Os pesos dos temas foram estimados visualmente a partir do comprimento das barras. Os scores de contatos são uma simulação de cliques nas últimas 24h. Os tempos de citação só podem ser chamados de leitura quando vierem de eventos reais de permanência ativa.
+          </p>
+        </Card>
+
+        <SubHeading icon={Target} title="Temas com maior peso emocional/editorial" />
+        <Card style={{ padding: "20px 20px 8px", marginBottom: 28 }}>
+          <div style={{ width: "100%", height: 290 }}>
+            <ResponsiveContainer>
+              <BarChart data={emotionalThemes} layout="vertical" margin={{ left: 8, right: 18, top: 4, bottom: 4 }}>
+                <CartesianGrid stroke="rgba(255,255,255,.06)" horizontal={false} />
+                <XAxis type="number" domain={[0, 100]} unit="%" stroke={T.muted} fontSize={11} tickLine={false} axisLine={{ stroke: T.border }} />
+                <YAxis type="category" dataKey="theme" width={190} stroke={T.muted} fontSize={10.5} tickLine={false} axisLine={false} />
+                <Tooltip formatter={(value) => [`${value}%`, "Peso estimado"]} cursor={{ fill: "rgba(255,255,255,.03)" }} contentStyle={{ background: T.navyTile, border: `1px solid ${T.border}`, borderRadius: 10, color: T.text, fontSize: ".8rem" }} />
+                <Bar dataKey="weight" name="Peso estimado" radius={[0, 4, 4, 0]} maxBarSize={18} fill={T.electric} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <SubHeading icon={Target} title="Interesse por contato · simulação de cliques" />
+        <Card style={{ padding: 0, overflow: "hidden", marginBottom: 28 }}>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: ".82rem" }}>
+              <thead><tr style={{ borderBottom: `1px solid ${T.border}` }}>
+                {["Contato", "Score", "Classificação"].map((heading) => <th key={heading} style={{ textAlign: "left", padding: "12px 16px", color: T.muted, fontSize: ".7rem", textTransform: "uppercase", letterSpacing: ".05em" }}>{heading}</th>)}
+              </tr></thead>
+              <tbody>{contactInterest.map((item, index) => (
+                <tr key={item.contact} style={{ borderBottom: index < contactInterest.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                  <td style={{ padding: "11px 16px", color: T.text, fontWeight: 600 }}>{item.contact}</td>
+                  <td style={{ padding: "11px 16px", color: T.electric, fontWeight: 800 }}>{item.score}</td>
+                  <td style={{ padding: "11px 16px", color: item.classification === "Alta" ? "#ef4444" : item.classification === "Média" ? "#f59e0b" : T.muted }}>{item.classification}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+          <div style={{ padding: "12px 16px", borderTop: `1px solid ${T.border}`, color: T.muted, fontSize: ".78rem" }}>Total dos scores visíveis: <strong style={{ color: T.text }}>{visibleContactScore}</strong></div>
+        </Card>
+        <Card style={{ padding: "20px 20px 8px", marginBottom: 28 }}>
+          <div style={{ width: "100%", height: 270 }}>
+            <ResponsiveContainer>
+              <BarChart data={contactInterest} layout="vertical" margin={{ left: 8, right: 18, top: 4, bottom: 4 }}>
+                <CartesianGrid stroke="rgba(255,255,255,.06)" horizontal={false} />
+                <XAxis type="number" domain={[0, 100]} stroke={T.muted} fontSize={11} tickLine={false} axisLine={{ stroke: T.border }} />
+                <YAxis type="category" dataKey="contact" width={82} stroke={T.muted} fontSize={10.5} tickLine={false} axisLine={false} />
+                <Tooltip formatter={(value) => [value, "Score"]} cursor={{ fill: "rgba(255,255,255,.03)" }} contentStyle={{ background: T.navyTile, border: `1px solid ${T.border}`, borderRadius: 10, color: T.text, fontSize: ".8rem" }} />
+                <Bar dataKey="score" name="Score" radius={[0, 4, 4, 0]} maxBarSize={16}>
+                  {contactInterest.map((item) => <Cell key={item.contact} fill={item.classification === "Alta" ? "#ef4444" : item.classification === "Média" ? "#f59e0b" : T.muted} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+
+        <SubHeading icon={Target} title="Interesse por citação · tempo médio" />
+        <Card style={{ padding: 0, overflow: "hidden", marginBottom: 18 }}>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: ".82rem" }}>
+              <thead><tr style={{ borderBottom: `1px solid ${T.border}` }}>
+                {["Pessoa/entidade", "Trecho", "Tempo", "Classificação"].map((heading) => <th key={heading} style={{ textAlign: "left", padding: "12px 16px", color: T.muted, fontSize: ".7rem", textTransform: "uppercase", letterSpacing: ".05em" }}>{heading}</th>)}
+              </tr></thead>
+              <tbody>{citationInterest.map((item, index) => (
+                <tr key={item.entity} style={{ borderBottom: index < citationInterest.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                  <td style={{ padding: "11px 16px", color: T.text, fontWeight: 600 }}>{item.entity}</td>
+                  <td style={{ padding: "11px 16px", color: T.muted }}>{item.excerpt}</td>
+                  <td style={{ padding: "11px 16px", color: T.electric, fontWeight: 800 }}>{item.seconds}s</td>
+                  <td style={{ padding: "11px 16px", color: item.classification === "Alta" ? "#ef4444" : item.classification === "Média" ? "#f59e0b" : T.muted }}>{item.classification}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </div>
+          <div style={{ padding: "12px 16px", borderTop: `1px solid ${T.border}`, color: T.muted, fontSize: ".78rem" }}>Tempo médio dos 8 registros: <strong style={{ color: T.text }}>{averageCitationTime.toFixed(1).replace(".", ",")} segundos</strong></div>
+        </Card>
+        <Card style={{ padding: "20px 20px 8px" }}>
+          <div style={{ width: "100%", height: 250 }}>
+            <ResponsiveContainer>
+              <BarChart data={citationInterest} layout="vertical" margin={{ left: 8, right: 18, top: 4, bottom: 4 }}>
+                <CartesianGrid stroke="rgba(255,255,255,.06)" horizontal={false} />
+                <XAxis type="number" unit="s" stroke={T.muted} fontSize={11} tickLine={false} axisLine={{ stroke: T.border }} />
+                <YAxis type="category" dataKey="entity" width={70} stroke={T.muted} fontSize={10.5} tickLine={false} axisLine={false} />
+                <Tooltip formatter={(value) => [`${value}s`, "Tempo"]} cursor={{ fill: "rgba(255,255,255,.03)" }} contentStyle={{ background: T.navyTile, border: `1px solid ${T.border}`, borderRadius: 10, color: T.text, fontSize: ".8rem" }} />
+                <Bar dataKey="seconds" name="Tempo" radius={[0, 4, 4, 0]} maxBarSize={16} fill={T.electric} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </Section>
+
+      <Section n="06" title="Instrumentação v2">
         <p style={pStyle}>Para estudar atenção e navegação de forma defensável, a próxima versão deve separar alcance, impressão e interação, com identificadores anonimizados e documentação de schema.</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(245px, 1fr))", gap: 10 }}>
           {v2Events.map((event) => (
@@ -142,14 +239,14 @@ export default function DetailViewMasterZap({ onBack }) {
         </div>
       </Section>
 
-      <Section n="06" title="Considerações éticas">
+      <Section n="07" title="Considerações éticas">
         <p style={pStyle}>O acervo pode conter dados pessoais, terceiros não públicos e comunicações de origem sensível. A publicação deve reduzir o risco de reidentificação e de amplificação indevida do material de origem.</p>
         <ul style={{ margin: 0, paddingLeft: 19, color: T.muted, fontSize: ".86rem", lineHeight: 1.8 }}>
           {ethicalPrinciples.map((principle) => <li key={principle}>{principle}</li>)}
         </ul>
       </Section>
 
-      <Section n="07" title="Limitações e conclusão">
+      <Section n="08" title="Limitações e conclusão">
         <Card style={{ padding: 20, marginBottom: 20, background: T.navyTile }}>
           <strong style={{ display: "block", color: T.electric, fontSize: ".88rem", marginBottom: 8 }}>Conclusão provisória</strong>
           <p style={{ margin: 0, color: T.muted, fontSize: ".86rem", lineHeight: 1.7 }}>
