@@ -39,7 +39,7 @@ export default function App() {
           <ListView onOpen={(slug) => setView(slug)} />
         ) : (
           <Suspense fallback={<DetailFallback />}>
-            <DetailComponent onBack={() => setView("list")} />
+            <DetailComponent onBack={() => setView("list")} report={activeReport} />
           </Suspense>
         )}
       </div>
