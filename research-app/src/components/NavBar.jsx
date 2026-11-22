@@ -26,7 +26,7 @@ export default function NavBar({ view, onHome }) {
           onClick={onHome}
           style={{ display: "flex", alignItems: "center", gap: 12, background: "none", border: "none", cursor: "pointer", padding: 0 }}
         >
-          <img src="https://recomendeme.com/pt/logo_header.png" alt="RecomendeMe" style={{ height: 28, width: "auto" }} />
+          <img src="https://recomendeme.com/uploads/03adb133c957ad48fa40016e4ae4c3ee94165675.jpg" alt="RecomendeMe" style={{ height: 28, width: "auto" }} />
           <span style={{ width: 1, height: 18, background: T.border }} />
           <span style={{ fontWeight: 700, fontSize: ".95rem", color: T.text, letterSpacing: ".01em" }}>Research</span>
         </button>
